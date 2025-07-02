@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Struktur Legalitas Interaktif - Equityworld Futures</title>
+    <style>
+        /* CSS - Untuk Desain dan Tampilan */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        :root {
+            --primary-color: #0d214c;
+            --secondary-color: #d1a10f;
+            --bg-color: #f4f7fc;
+            --text-color: #333;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1, h2 {
+            color: var(--primary-color);
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0;
+        }
+
+        h2.subtitle {
+            font-weight: 400;
+            margin-top: 0;
+            margin-bottom: 3rem;
+            color: #555;
+        }
+
+        .container {
+            display: grid;
+            grid-template-areas:
+                "header header header"
+                "kementrian kementrian keamanan"
+                "bappebti bappebti keamanan"
+                "arrow-down-center arrow-down-center keamanan"
+                "bursa kliring keamanan"
+                "broker broker broker"
+                "bank bank bank"
+                "nasabah nasabah nasabah";
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+            position: relative;
+        }
+
+        .node {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-left: 5px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .node:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* New CSS for node logos */
+        .node-logo {
+            height: 50px;
+            object-fit: contain; /* Prevents image distortion */
+            margin-bottom: 15px;
+            align-self: center;
+        }
+
+        .node h3 {
+            margin: 0 0 10px 0;
+            color: var(--primary-color);
+        }
+
+        .node p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* Penempatan Grid */
+        #kementrian { grid-area: kementrian; }
+        #bappebti { grid-area: bappebti; }
+        #bursa { grid-area: bursa; }
+        #kliring { grid-area: kliring; }
+        #broker { grid-area: broker; background-color: #e3f2fd; border-left-color: var(--secondary-color); }
+        #nasabah { grid-area: nasabah; background-color: var(--secondary-color); color: white; border: none; }
+        #nasabah h3, #nasabah p { color: white; }
+        #keamanan { grid-area: keamanan; background-color: #fffaf0; border-left-color: #f59e0b; padding-left: 30px; justify-content: start;}
+        #bank { grid-area: bank; }
+        
+        /* Panel Keamanan Dana */
+        #keamanan {
+            text-align: left;
+            cursor: default;
+        }
+        #keamanan ul {
+            padding-left: 20px;
+            list-style: none;
+        }
+        #keamanan li {
+            position: relative;
+            padding-left: 35px;
+            margin-bottom: 20px;
+        }
+        #keamanan li::before {
+            content: '✔';
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 20px;
+            color: #22c55e; /* green-500 */
+        }
+
+        /* Bank Logos */
+        .bank-logos {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding-top: 15px;
+        }
+        .bank-logos img {
+            height: 40px;
+            filter: grayscale(100%);
+            transition: filter 0.3s ease;
+        }
+        .bank-logos img:hover {
+            filter: grayscale(0%);
+        }
+
+        /* Arrows (using CSS Borders) */
+        .arrow {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .node::after, .node::before {
+            content: '';
+            position: absolute;
+            background-color: #adb5bd;
+            z-index: -1;
+        }
+        
+        #bappebti::before { /* Arrow from Kementrian */
+            height: 20px; width: 4px;
+            left: 50%; top: -20px;
+            transform: translateX(-50%);
+        }
+        #bursa::before, #kliring::before { /* Arrows from Bappebti */
+            height: 40px; width: 4px;
+            left: 50%; top: -40px;
+            transform: translateX(-50%);
+        }
+        #broker::before { /* Arrow from Bursa/Kliring middle point */
+            height: 20px; width: 4px;
+            left: 50%; top: -20px;
+            transform: translateX(-50%);
+        }
+        #nasabah::before { /* Arrow from Broker */
+             height: 20px; width: 4px;
+            left: 50%; top: -20px;
+            transform: translateX(-50%);
+        }
+
+        /* Modal / Pop-up */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            animation: fadeIn 0.5s;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: slideIn 0.5s;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .close-button {
+            color: #aaa;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-button:hover {
+            color: #333;
+        }
+        
+        .modal-body a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .modal-body a:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+
+        @keyframes slideIn {
+            from {transform: translateY(-50px); opacity: 0;}
+            to {transform: translateY(0); opacity: 1;}
+        }
+        
+        /* Responsive design for mobile */
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            h1 { font-size: 1.8rem; }
+            .container {
+                display: flex;
+                flex-direction: column;
+            }
+            .node::before, .node::after { display: none; /* Hide arrows on mobile */ }
+            .modal-content { width: 90%; margin: 20% auto; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>Struktur Legalitas Interaktif</h1>
+    <h2 class="subtitle">Klik pada setiap kotak untuk melihat detailnya.</h2>
+
+    <div class="container">
+        <div id="kementrian" class="node" data-info="kementrian">
+            <img src="logo-kementerianperdagangan.svg" alt="Logo Kementerian Perdagangan" class="node-logo">
+            <h3>Kementerian Perdagangan R.I.</h3>
+            <p>Regulator utama perdagangan di Indonesia.</p>
+        </div>
+
+        <div id="bappebti" class="node" data-info="bappebti">
+            <img src="logo-bappebti.png" alt="Logo BAPPEBTI" class="node-logo">
+            <h3>BAPPEBTI</h3>
+            <p>Badan Pengawas Perdagangan Berjangka Komoditi</p>
+        </div>
+        
+        <div id="bursa" class="node" data-info="bursa">
+            <img src="logo-bbj.png" alt="Logo BBJ" class="node-logo">
+            <h3>BBJ (Bursa Berjangka Jakarta)</h3>
+            <p>Tempat resmi untuk transaksi kontrak berjangka.</p>
+        </div>
+
+        <div id="kliring" class="node" data-info="kliring">
+            <img src="logo-kbi.png" alt="Logo KBI" class="node-logo">
+            <h3>KBI (Kliring Berjangka Indonesia)</h3>
+            <p>Penjamin dana dan penyelesaian transaksi nasabah.</p>
+        </div>
+
+        <div id="broker" class="node" data-info="broker">
+            <h3>PT. EQUITYWORLD FUTURES</h3>
+            <p>Fasilitator yang menghubungkan nasabah ke bursa.</p>
+        </div>
+
+        <div id="nasabah" class="node" data-info="nasabah">
+            <h3>NASABAH</h3>
+            <p>Investor yang melakukan transaksi.</p>
+        </div>
+        
+        <div id="keamanan" class="node">
+            <h3>Keamanan Dana Terjamin</h3>
+            <ul>
+                <li><strong>Rekening Terpisah (Segregated Account)</strong><br>Dana nasabah disimpan di rekening terpisah dari rekening perusahaan, diawasi langsung oleh BAPPEBTI.</li>
+                <li><strong>Kerahasiaan Terjamin</strong><br>Seluruh data dan riwayat transaksi nasabah dijaga kerahasiaannya.</li>
+                <li><strong>Audit Berkala</strong><br>Dana transaksi nasabah diaudit secara rutin untuk memastikan transparansi dan keamanan.</li>
+            </ul>
+        </div>
+        
+        <div id="bank" class="node" data-info="bank">
+             <h3>Bank Penyimpan Dana Nasabah</h3>
+             <p>Dana nasabah ditempatkan pada bank-bank kustodian yang disetujui BAPPEBTI.</p>
+             <div class="bank-logos">
+                <img src="logo-bca.png" alt="Logo BCA">
+                <img src="logo-bni.png" alt="Logo BNI">
+                <img src="logo-mandiri.png" alt="Logo Mandiri">
+                <img src="logo-cimbniaga.png" alt="Logo CIMB Niaga">
+             </div>
+        </div>
+    </div>
+
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"></h2>
+                <span class="close-button">&times;</span>
+            </div>
+            <div id="modalBody" class="modal-body">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JAVASCRIPT - Untuk Interaktivitas
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Data untuk ditampilkan di Pop-up
+            const infoData = {
+                kementrian: {
+                    title: "Kementerian Perdagangan",
+                    content: "Kementerian Perdagangan Republik Indonesia adalah regulator pemerintah tertinggi yang membawahi BAPPEBTI. Perannya adalah menetapkan kebijakan umum di sektor perdagangan, termasuk perdagangan berjangka komoditi."
+                },
+                bappebti: {
+                    title: "BAPPEBTI",
+                    content: "Badan Pengawas Perdagangan Berjangka Komoditi (BAPPEBTI) bertugas mengawasi dan meregulasi kegiatan perdagangan berjangka di Indonesia. PT. Equityworld Futures beroperasi di bawah izin dan pengawasan ketat dari BAPPEBTI, sesuai amanat <strong>UU No. 10/2011 Pasal 3</strong>.<br><br>Kunjungi situs resmi di: <a href='https://www.bappebti.go.id' target='_blank'>www.bappebti.go.id</a>"
+                },
+                bursa: {
+                    title: "Bursa Berjangka Jakarta (BBJ/JFX)",
+                    content: "Semua transaksi nasabah dieksekusi secara transparan dan adil di Bursa Berjangka Jakarta (Jakarta Futures Exchange). BBJ adalah satu-satunya bursa berjangka di Indonesia yang menyediakan platform untuk transaksi kontrak-kontrak berjangka secara legal, sesuai <strong>UU No. 10/2011 Pasal 10</strong>.<br><br>Kunjungi situs resmi di: <a href='https://www.jfx.co.id' target='_blank'>www.jfx.co.id</a>"
+                },
+                kliring: {
+                    title: "Kliring Berjangka Indonesia (KBI)",
+                    content: "PT. Kliring Berjangka Indonesia (Persero) berperan sebagai lembaga kliring dan penjaminan. KBI menjamin semua penyelesaian transaksi yang terjadi di BBJ dan mengelola dana jaminan nasabah (collateral) untuk memastikan keamanan dan integritas pasar, sesuai <strong>UU No. 10/2011 Pasal 24</strong>.<br><br>Kunjungi situs resmi di: <a href='https://www.ptkbi.com' target='_blank'>www.ptkbi.com</a>"
+                },
+                broker: {
+                    title: "PT. Equityworld Futures",
+                    content: "Peran kami adalah sebagai perusahaan pialang (fasilitator) resmi yang terdaftar di BAPPEBTI. Kami menghubungkan nasabah dengan sistem transaksi di Bursa Berjangka Jakarta (BBJ), menyediakan layanan, edukasi, dan platform trading, sesuai <strong>UU No. 10/2011 Pasal 50</strong>.<br><br><strong>Alamat:</strong> Trillium Office & Residence Lantai 2, Jl. Pemuda 108-116 Surabaya, 60271 INDONESIA.<br><strong>Email:</strong> corporate@equityworld-futures.co.id"
+                },
+                nasabah: {
+                    title: "Anda, Nasabah Kami",
+                    content: "Sebagai nasabah, Anda adalah pusat dari ekosistem ini. Dengan dukungan struktur legalitas yang kuat, Anda dapat melakukan transaksi dengan aman, transparan, dan percaya diri. Dana Anda dijamin, transaksi Anda diawasi, dan kami siap memfasilitasi kebutuhan trading Anda."
+                },
+                bank: {
+                    title: "Bank Penyimpan Dana",
+                    content: "Sesuai regulasi BAPPEBTI, seluruh dana investasi nasabah disimpan di Rekening Dana Terpisah (Segregated Account) pada bank kustodian yang ditunjuk, seperti BCA, BNI, Mandiri, dan CIMB Niaga. Hal ini memastikan dana nasabah tidak tercampur dengan dana operasional perusahaan dan hanya dapat digunakan untuk kepentingan transaksi nasabah itu sendiri."
+                }
+            };
+            
+            // Ambil semua elemen yang dibutuhkan
+            const modal = document.getElementById('infoModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            const closeButton = document.querySelector('.close-button');
+            const nodes = document.querySelectorAll('.node');
+
+            // Tambahkan event listener untuk setiap kotak
+            nodes.forEach(node => {
+                // Jangan tambahkan event klik ke panel keamanan statis
+                if (node.id === 'keamanan') return;
+
+                node.addEventListener('click', () => {
+                    const infoKey = node.getAttribute('data-info');
+                    if (infoData[infoKey]) {
+                        modalTitle.innerText = infoData[infoKey].title;
+                        modalBody.innerHTML = infoData[infoKey].content;
+                        modal.style.display = 'block';
+                    }
+                });
+            });
+
+            // Fungsi untuk menutup modal
+            function closeModal() {
+                modal.style.display = 'none';
+            }
+
+            // Event listener untuk tombol close
+            closeButton.addEventListener('click', closeModal);
+
+            // Event listener untuk klik di luar modal
+            window.addEventListener('click', (event) => {
+                if (event.target == modal) {
+                    closeModal();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
